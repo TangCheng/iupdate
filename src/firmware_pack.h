@@ -17,7 +17,7 @@
 #define FIRMWARE_PACK_OUT_MEM   -5
 #define FIRMWARE_PACK_ERR_FILE -6
 
-#define FIRMWARE_MAGIC "Tang"
+#define FIRMWARE_MAGIC "IPNC"
 #define MAX_BLOCK_SIZE (1024*1024*1024)
 
 typedef struct tagFirmwareBlock {

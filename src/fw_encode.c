@@ -17,12 +17,16 @@ static int32_t make_version(uint8_t major, uint8_t minor, uint8_t revision) {
 static void usage(void)
 {
 	static char *usage_str = 
-		"Usage: fw_encode [OPTION] FILE...\n"
+		"Usage: fw_encode [OPTION] [<NAME FILE>]...\n"
 		"  -h, --help             display this help and exit\n"
 		"  -n, --note=NOTE        note of this firmware, can be any text\n"
 		"  -o, --output=FILENAME  output file\n"
 		"  -V, --version=VERSION  firmware version\n"
 		"                         in maj.min.rev format\n"
+		"For example:\n"
+		"  fw_encode -n \"some note\" -V 1.0.0 -o firmware.bin \\\n"
+		"            kernel ./uImage-initramfs rootfs \\\n"
+		"            rootfs ./rootfs_64k.squashfs\n"
 		"";
 	puts(usage_str);
 }
@@ -89,7 +93,7 @@ int main(int argc, char ** argv)
 		return -1;
 	}
 
-	firmware_pack_encode(fw_version, argc - optind,  
+	firmware_pack_encode(fw_version, (argc - optind) / 2,  
 	                     (const char **)&argv[optind],
 	                     note, output);
 

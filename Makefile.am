@@ -3,7 +3,7 @@
 
 SUBDIRS = src 
 
-dist_doc_DATA = \
+noinst_DATA = \
 	README \
 	COPYING \
 	AUTHORS \

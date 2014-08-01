@@ -92,24 +92,26 @@ static void encode_data(char * buf, int32_t length)
     r = blockEncrypt(&cipherInst, &keyInst, (BYTE *)buf, length*8, (BYTE *)buf);
 }
 
-static int load_block(const char * name, FirmwareBlockCtrl * block_ctrl)
+static int load_block(const char * blockname,
+                      const char * filename,
+                      FirmwareBlockCtrl * block_ctrl)
 {
-    assert(name);
+    assert(blockname && filename);
     assert(block_ctrl);
 
-    if (name[0] == 0 || strlen(name) >= BLOCK_NAME_SIZE)
+    if (!blockname[0] || strlen(blockname) >= BLOCK_NAME_SIZE)
     {
-        printf("ERROR: invalid block name %s\n", name);
+        printf("ERROR: invalid block name %s\n", blockname);
         return 0;
     }
 
-    block_ctrl->data = load_file(name, AES_PAD_SIZE, &block_ctrl->block->length, &block_ctrl->block->tail);
+    block_ctrl->data = load_file(filename, AES_PAD_SIZE, &block_ctrl->block->length, &block_ctrl->block->tail);
     if (block_ctrl->data == NULL)
     {
         return 0;
     }
 
-    strcpy(block_ctrl->block->name, name);
+    strcpy(block_ctrl->block->name, blockname);
     compute_md5(block_ctrl->data, block_ctrl->block->length, block_ctrl->block->md5);
     encode_data(block_ctrl->data, block_ctrl->block->length);
 
@@ -163,7 +165,7 @@ int firmware_pack_encode(int32_t version,
     for (i = 0; i < block_count; ++i)
     {
         block_ctrls[i].block = &head->blocks[i];
-        if (!load_block(block_names[i], &block_ctrls[i]))
+        if (!load_block(block_names[i * 2], block_names[i * 2 + 1], &block_ctrls[i]))
         {
             free_block_ctrls(block_count, block_ctrls);
             free(head);

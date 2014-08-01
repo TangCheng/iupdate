@@ -1,7 +1,7 @@
 ## Process this file with automake to produce Makefile.in
 
 
-lib_LIBRARIES =  \
+noinst_LIBRARIES =  \
 	libicrypt.a
 
 libicrypt_a_SOURCES =  \
